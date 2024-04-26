@@ -28,7 +28,7 @@ function BackgroundParticles.new(bp, color_A, color_B)
     end
 end
 
-function BackgroundParticles.update(bp, dt, velocity)
+function BackgroundParticles.update(bp, dt)
     local velocity
     if love.keyboard.isDown(key_notes[1][1]) or love.keyboard.isDown(key_notes[2][1]) then
         velocity = 25

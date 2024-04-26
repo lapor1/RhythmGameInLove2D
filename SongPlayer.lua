@@ -52,11 +52,13 @@ function SongPlayer.new(self, speed, bpm, musicFile, nKeys)
     self.file = assert(io.open(musicFile .. ".lpr", "r"))
     self.speed = speed
     self.bpm = bpm 
-    self.offset = notesHigh / self.speed
     self.rangeTime = 60 * 4 / self.bpm
+    self.offset = notesHigh / self.speed + (self.rangeTime / self.compass.divisor)
     --self.numbersOfKeys = nKeys
     self.nKeys = nKeys
     Key.init(keys, key_notes, nKeys) 
+
+    --getNoteOrEnd = SongPlayer.interpretLine(self)
 end
 
 function SongPlayer.interpretLine(self)

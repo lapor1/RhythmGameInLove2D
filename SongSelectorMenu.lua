@@ -11,6 +11,8 @@ local function startNewGame()
     gameState["running"] = true
     BackgroundParticles.new(particles, {r=255, g=0, b=0}, {r=255, g=0, b=255})
 
+    song = SongPlayer.init() 
+
     if songId == 1 then 
         SongPlayer.new(song, 300, 130, "music_1", 3)
     end
