@@ -1,7 +1,6 @@
 --SongInterpreter = require "SongInterpreter"
 local SongPlayer = {}
 
-
 local errorTolerance = 0.5
 local perfect_percent = 0.3
 local good_percent = 0.6
@@ -37,11 +36,12 @@ function SongPlayer.init()
         countPlayedNotes = 0,
         points = 1000,
 
+        -- intento de variables estaticas
         readedCounter = 1,
         readingNotes = false,
         stringLine = "",
-        --interpreter = SongInterpreter.init()
-        nKeys = 0
+        nKeys = 0,
+        fisrtCompass = false
     }
     
     return self
@@ -53,27 +53,41 @@ function SongPlayer.new(self, speed, bpm, musicFile, nKeys)
     self.speed = speed
     self.bpm = bpm 
     self.rangeTime = 60 * 4 / self.bpm
-    self.offset = notesHigh / self.speed + (self.rangeTime / self.compass.divisor)
+    self.offset = notesHigh / self.speed --+ (self.rangeTime / self.compass.divisor)
     --self.numbersOfKeys = nKeys
     self.nKeys = nKeys
     Key.init(keys, key_notes, nKeys) 
 
+    self.timerCounter = 0
+
+    local getNoteOrEnd = false
+    while (not getNoteOrEnd) do
+        getNoteOrEnd = SongPlayer.interpretLine(self)
+        --getNoteOrEnd = SongInterpreter.interpretLine(self.interpreter)
+    end
     --getNoteOrEnd = SongPlayer.interpretLine(self)
 end
 
 function SongPlayer.interpretLine(self)
+
     --Read line
-    if (not self.readingNotes) then self.stringLine = self.file:read("*line") end
+    if (not self.readingNotes) then 
+        self.stringLine = self.file:read("*line") 
+    end
+
     --Check if song ended
     if (self.stringLine == "end") then
         -- termina la cancion
         self.endSong = true
-        SongPlayer.createCompassLine(self)
+        SongPlayer.createCompassLine(self, false)
         return true
+
     --Read atributes
     elseif (string.sub(self.stringLine, 1,1) == "[") then
         local i = 2
         local j
+        local hasMsg = false
+        local changeCompass = false
         while (string.sub(self.stringLine, i, i) ~= "]") do
             if (string.sub(self.stringLine, i, i + 1) == "c=") then
                 i = i + 2; j = i
@@ -81,6 +95,7 @@ function SongPlayer.interpretLine(self)
                 self.compass.dividen = tonumber(string.sub(self.stringLine, i, j - 1)); i = j + 1; j = i
                 while ((string.sub(self.stringLine, j, j) ~= ",") and (string.sub(self.stringLine, j, j) ~= "]")) do j = j + 1 end
                 self.compass.divisor = tonumber(string.sub(self.stringLine, i, j - 1)); i = j
+                changeCompass = true
             elseif (string.sub(self.stringLine, i, i + 1) == "b=") then
                 i = i + 2; j = i
                 while ((string.sub(self.stringLine, j, j) ~= ",") and (string.sub(self.stringLine, j, j) ~= "]")) do j = j + 1 end
@@ -94,21 +109,37 @@ function SongPlayer.interpretLine(self)
                 i = i + 2; j = i
                 while ((string.sub(self.stringLine, j, j) ~= ",") and (string.sub(self.stringLine, j, j) ~= "]")) do j = j + 1 end
                 self.compass.msg = string.sub(self.stringLine, i, j - 1); i = j
+                hasMsg = true
             else
                 i = i + 1
             end
         end
-        SongPlayer.createCompassLine(self)
+
+        if changeCompass and not hasMsg then 
+            self.compass.msg = self.compass.dividen .. "/" .. self.compass.divisor
+        end
+        self.fisrtCompass = true
         return false
+
     -- Coments
     elseif (string.sub(self.stringLine, 1,1) == "") or (string.sub(self.stringLine, 1,1) == " ") or (string.sub(self.stringLine, 1,1) == "-") then
         return false
+
     --Read Notes
     else
         if (not self.readingNotes) then
             self.readingNotes = true
-            SongPlayer.createCompassLine(self)
+            
+            if self.fisrtCompass then
+                SongPlayer.createCompassLine(self, true)
+                self.fisrtCompass = false
+            else
+                SongPlayer.createCompassLine(self, false)
+            end
+            
+            --SongPlayer.createCompassLine(self, true)
         end 
+
         --lee notas
         local noteCoord = (self.readedCounter - 1) * (self.nKeys + 1)
         for i = 1, self.nKeys do
@@ -135,11 +166,15 @@ function SongPlayer.createNewNote(self, i)
     self.notesInScreenVector[self.notesInScreenSize].key = i
 end
 
-function SongPlayer.createCompassLine(self)
+function SongPlayer.createCompassLine(self, withMsg)
     self.compassLineSize = self.compassLineSize + 1
     self.compassLine[self.compassLineSize] = {}
     self.compassLine[self.compassLineSize].y = 0
-    self.compassLine[self.compassLineSize].text = self.compass.msg
+    if withMsg then 
+        self.compassLine[self.compassLineSize].text = self.compass.msg
+    else 
+        self.compassLine[self.compassLineSize].text = ""
+    end
 end
 
 function SongPlayer.eliminateCompassLine(self, i)
@@ -213,6 +248,7 @@ function SongPlayer.update(self, dt)
     -- Calcula cuando poner la siguiente nota
     self.timerCounter = self.timerCounter + dt
     if (self.timerCounter >= (self.rangeTime / self.compass.divisor)) then
+        local oldDivisor = self.compass.divisor
         if not self.endSong then
             local getNoteOrEnd = false
             while (not getNoteOrEnd) do
@@ -220,7 +256,7 @@ function SongPlayer.update(self, dt)
                 --getNoteOrEnd = SongInterpreter.interpretLine(self.interpreter)
             end
         end
-        self.timerCounter = self.timerCounter - (self.rangeTime / self.compass.divisor)
+        self.timerCounter = self.timerCounter - (self.rangeTime / oldDivisor)
     end
 
     --Chequea si se van de largo las notas

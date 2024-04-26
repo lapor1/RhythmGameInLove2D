@@ -23,6 +23,7 @@ local function startNewGame()
         SongPlayer.new(song, 400, 140, "music_3", 4)
     end
     if songId == 4 then
+        love.audio.setVolume(0.2)
         SongPlayer.new(song, 400, 130, "music_4", 3)
     end
 
