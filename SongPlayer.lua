@@ -131,10 +131,10 @@ function SongPlayer.interpretLine(self)
             self.readingNotes = true
             
             if self.fisrtCompass then
-                SongPlayer.createCompassLine(self, true)
+                SongPlayer.createCompassLine(self, true, true)
                 self.fisrtCompass = false
             else
-                SongPlayer.createCompassLine(self, false)
+                SongPlayer.createCompassLine(self, false, true)
             end
             
             --SongPlayer.createCompassLine(self, true)
@@ -146,6 +146,9 @@ function SongPlayer.interpretLine(self)
             if (string.sub(self.stringLine, noteCoord + i, noteCoord + i) == 'X') then
                 SongPlayer.createNewNote(self, i)
             end
+        end
+        if self.readedCounter > 1 then 
+            SongPlayer.createCompassLine(self, false, false)
         end
         if (self.readedCounter < self.compass.dividen) then
             self.readedCounter = self.readedCounter + 1
@@ -166,10 +169,11 @@ function SongPlayer.createNewNote(self, i)
     self.notesInScreenVector[self.notesInScreenSize].key = i
 end
 
-function SongPlayer.createCompassLine(self, withMsg)
+function SongPlayer.createCompassLine(self, withMsg, isThick)
     self.compassLineSize = self.compassLineSize + 1
     self.compassLine[self.compassLineSize] = {}
     self.compassLine[self.compassLineSize].y = 0
+    self.compassLine[self.compassLineSize].isThick = isThick
     if withMsg then 
         self.compassLine[self.compassLineSize].text = self.compass.msg
     else 
@@ -182,6 +186,7 @@ function SongPlayer.eliminateCompassLine(self, i)
     for j=i, self.compassLineSize do
         self.compassLine[j].y = self.compassLine[j+1].y
         self.compassLine[j].text = self.compassLine[j+1].text
+        self.compassLine[j].isThick = self.compassLine[j+1].isThick
     end
 end
 
@@ -291,10 +296,16 @@ function SongPlayer.draw(self)
     love.graphics.print("points = " .. self.points , 100, 400, 0, 2, 2)
 
     for i=1, self.compassLineSize do
-        love.graphics.line(750, self.compassLine[i].y , 1200, self.compassLine[i].y)
-        love.graphics.print(self.compassLine[i].text, 630, self.compassLine[i].y - 70, 0, 5, 5)
+        if self.compassLine[i].isThick then 
+            love.graphics.setColor(1,1,1,1)
+        else
+            love.graphics.setColor(0.1,0.1,0.1,1)
+        end
+        love.graphics.line(key_notes[#key_notes - self.nKeys + 1][2] - 50, self.compassLine[i].y , 1200, self.compassLine[i].y)
+        love.graphics.print(self.compassLine[i].text, key_notes[#key_notes - self.nKeys + 1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
     end
 
+    love.graphics.setColor(1,1,1,1)
     for i=1, self.notesInScreenSize do
         -- draw note
         love.graphics.line(self.notesInScreenVector[i].x - lineNoteWidth, self.notesInScreenVector[i].y, self.notesInScreenVector[i].x + lineNoteWidth, self.notesInScreenVector[i].y)

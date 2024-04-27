@@ -17,7 +17,7 @@ local function startNewGame()
         SongPlayer.new(song, 300, 130, "music_1", 3)
     end
     if songId == 2 then 
-        SongPlayer.new(song, 400, 130, "music_2", 4)
+        SongPlayer.new(song, 400, 200, "music_2", 4)
     end
     if songId == 3 then 
         SongPlayer.new(song, 400, 140, "music_3", 4)

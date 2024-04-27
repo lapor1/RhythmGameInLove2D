@@ -1,6 +1,6 @@
 function love.conf(t)
     --t.identity = "data/saves"
-    --t.console = false
+    t.console = false
     t.window.title = "Ryhthm Game"
     --t.window.icon = ".jpg"
     t.window.width = 1600
