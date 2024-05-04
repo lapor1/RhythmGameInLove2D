@@ -71,6 +71,23 @@ function SongSelectorMenu.keypressed(key)
     if (key == "left") and (songId >= 1) then 
         songId = songId - 1
     end
+    if (key == "right") and (songId <= 4) then 
+        songId = songId + 1
+    end
+    if key == "escape" then 
+        gameState["menu"] = true
+        gameState["songsMenu"] = false
+    end
+end
+
+function SongSelectorMenu.mousepressed(button, x, y)
+    if button == 1 then
+        if gameState["songsMenu"] then
+            for i in pairs(buttons.songsMenu_stage) do
+                buttons.songsMenu_stage[i]:checkIfClicked(x, y)
+            end
+        end
+    end
 end
 
 return SongSelectorMenu

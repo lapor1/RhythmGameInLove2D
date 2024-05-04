@@ -43,12 +43,6 @@ function Menu.keypressed(key)
     end
 end
 
-function Menu.checkIfClicked(x, y)
-    for i in pairs(buttons.menu_stage) do
-        buttons.menu_stage[i]:checkIfClicked(x, y)
-    end
-end
-
 function Menu.update()
     local x,y =  love.mouse.getPosition()
     for i in pairs(buttons.menu_stage) do
@@ -66,6 +60,14 @@ function Menu.draw()
     buttons.menu_stage.exit:draw(self.w/2 - self.buttonsWidth/2, self.h*5/6, self.buttonsWidth/2, self.buttonsHeight/2)
     love.graphics.setColor(1,1,1,0.2)
     love.graphics.rectangle("fill", self.w/2 - self.buttonsWidth/2, self.h*(self.selector + 3)/6, self.buttonsWidth, self.buttonsHeight)
+end
+
+function Menu.mousepressed(button, x, y)
+    if button == 1 then
+        for i in pairs(buttons.menu_stage) do
+            buttons.menu_stage[i]:checkIfClicked(x, y)
+        end
+    end
 end
 
 return Menu

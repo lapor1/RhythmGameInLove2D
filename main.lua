@@ -8,9 +8,10 @@ local SongSelectorMenu = require "SongSelectorMenu"
 function love.load()
     gameState = {
         menu = true,
+        songsMenu = false,
+        config = false,
         running = false,
         pause = false,
-        songsMenu = false,
     }
     buttons = {
         menu_stage = {},
@@ -32,15 +33,20 @@ function love.load()
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-    if button == 1 then
-        if gameState["songsMenu"] then
-            for i in pairs(buttons.songsMenu_stage) do
-                buttons.songsMenu_stage[i]:checkIfClicked(x, y)
-            end
-        end
-        if gameState["menu"] then
-            Menu.checkIfClicked(x, y)
-        end
+    if gameState["menu"] then
+        Menu.mousepressed(button, x, y)
+    end
+    if gameState["songsMenu"] then
+        SongSelectorMenu.mousepressed(button, x, y)
+    end  
+    if gameState["config"] then
+        --...
+    end
+    if gameState["running"] then
+        --...
+    end
+    if gameState["pause"] then
+        --...
     end
 end
 
@@ -48,36 +54,37 @@ function love.keypressed(key)
     if gameState["menu"] then
         Menu.keypressed(key)
     end
-    if gameState["running"] then 
-        SongPlayer.checkKey(song, key) 
-    end
-    if (key == "escape") then
-        if gameState["songsMenu"] then 
-            gameState["menu"] = true
-            gameState["songsMenu"] = false
-        end
-        if gameState["running"] then
-            gameState["running"] = false
-            gameState["songsMenu"] = true
-            SongPlayer.stopSong(song)
-        end
-    end
     if gameState["songsMenu"] then
         SongSelectorMenu.keypressed(key)
+    end
+    if gameState["config"] then
+        --...
+    end
+    if gameState["running"] then
+        SongPlayer.keypressed(song, key)
+    end
+    if gameState["pause"] then
+        --...
     end
 end
 
 
 function love.update(dt)
-    if gameState["running"] then
-        BackgroundParticles.update(particles, dt)
-        SongPlayer.update(song, dt)
+    if gameState["menu"] then
+        Menu.update()
     end
     if gameState["songsMenu"] then
         SongSelectorMenu.update()
     end
-    if gameState["menu"] then
-        Menu.update()
+    if gameState["config"] then
+        --...
+    end
+    if gameState["running"] then
+        BackgroundParticles.update(particles, dt)
+        SongPlayer.update(song, dt)
+    end
+    if gameState["pause"] then
+        --...
     end
 end
 
@@ -91,5 +98,11 @@ function love.draw()
     if gameState["running"] then
         BackgroundParticles.draw(particles)
         SongPlayer.draw(song, dt)
+    end
+    if gameState["config"] then
+        --...
+    end
+    if gameState["pause"] then
+        --...
     end
 end

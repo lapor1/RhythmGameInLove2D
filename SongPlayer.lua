@@ -330,4 +330,14 @@ function SongPlayer.checkKey(self, key)
     end 
 end
 
+function SongPlayer.keypressed(self, key)
+    if key == "escape" then
+        gameState["running"] = false
+        gameState["songsMenu"] = true
+        SongPlayer.stopSong(self)
+    else
+        SongPlayer.checkKey(song, key)
+    end
+end
+
 return SongPlayer
