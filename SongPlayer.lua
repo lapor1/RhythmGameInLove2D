@@ -48,8 +48,8 @@ function SongPlayer.init()
 end
 
 function SongPlayer.new(self, speed, bpm, musicFile, nKeys)
-    self.music = love.audio.newSource("sounds/" .. musicFile .. ".wav", "static")
-    self.file = assert(io.open(musicFile .. ".lpr", "r"))
+    self.music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static")
+    self.file = assert(io.open("songs/" .. musicFile .. ".lpr", "r"))
     self.speed = speed
     self.bpm = bpm 
     self.rangeTime = 60 * 4 / self.bpm

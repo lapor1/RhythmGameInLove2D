@@ -39,8 +39,7 @@ function Button(text, func, funcParam, width, height)
 
             love.graphics.setColor(1,1,1)
             love.graphics.rectangle("line", self.button_x, self.button_y, self.width, self.height)
-            love.graphics.print(self.text, self.text_x, self.text_y)
-        
+            love.graphics.print(self.text, self.text_x, self.text_y)     
         end
     }
 end
