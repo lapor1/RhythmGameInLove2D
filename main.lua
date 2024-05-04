@@ -23,7 +23,7 @@ function love.load()
         {"h", 1050, "H", {r=0, g=0.5, b=1}},
         {"j", 1150, "J", {r=0, g=1, b=1}}
     }
-    particles = BackgroundParticles.init()
+    BackgroundParticles.init()
     keys = {}
     notesHigh = love.graphics.getHeight() - 120
        
@@ -80,7 +80,7 @@ function love.update(dt)
         --...
     end
     if gameState["running"] then
-        BackgroundParticles.update(particles, dt)
+        BackgroundParticles.update(dt)
         SongPlayer.update(song, dt)
     end
     if gameState["pause"] then
@@ -96,7 +96,7 @@ function love.draw()
         SongSelectorMenu.draw()
     end
     if gameState["running"] then
-        BackgroundParticles.draw(particles)
+        BackgroundParticles.draw()
         SongPlayer.draw(song, dt)
     end
     if gameState["config"] then

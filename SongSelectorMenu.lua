@@ -9,7 +9,7 @@ local nSongs = 4
 local function startNewGame()
     gameState["songsMenu"] = false
     gameState["running"] = true
-    BackgroundParticles.new(particles, {r=255, g=0, b=0}, {r=255, g=0, b=255})
+    BackgroundParticles.new({r=255, g=0, b=0}, {r=255, g=0, b=255})
 
     song = SongPlayer.init() 
 
