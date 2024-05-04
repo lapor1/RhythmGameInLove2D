@@ -27,7 +27,7 @@ function love.load()
     notesHigh = love.graphics.getHeight() - 120
        
     SongSelectorMenu.init()
-    menu = Menu.init()
+    Menu.init()
     song = SongPlayer.init() 
 end
 
@@ -45,6 +45,9 @@ function love.mousepressed(x, y, button, istouch, presses)
 end
 
 function love.keypressed(key)
+    if gameState["menu"] then
+        Menu.keypressed(key)
+    end
     if gameState["running"] then 
         SongPlayer.checkKey(song, key) 
     end
@@ -62,9 +65,6 @@ function love.keypressed(key)
     if gameState["songsMenu"] then
         SongSelectorMenu.keypressed(key)
     end
-    if gameState["menu"] then
-        Menu.keypressed(menu, key)
-    end
 end
 
 
@@ -77,13 +77,13 @@ function love.update(dt)
         SongSelectorMenu.update()
     end
     if gameState["menu"] then
-        Menu.update(menu)
+        Menu.update()
     end
 end
 
 function love.draw()
     if gameState["menu"] then
-        Menu.draw(menu)
+        Menu.draw()
     end
     if gameState["songsMenu"] then
         SongSelectorMenu.draw()

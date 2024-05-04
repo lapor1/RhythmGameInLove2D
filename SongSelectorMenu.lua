@@ -68,7 +68,8 @@ function SongSelectorMenu.draw()
 end
 
 function SongSelectorMenu.keypressed(key)
-    if (key == "") then 
+    if (key == "left") and (songId >= 1) then 
+        songId = songId - 1
     end
 end
 
