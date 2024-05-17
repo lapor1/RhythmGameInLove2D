@@ -15,6 +15,7 @@ local self = {
     h = love.graphics.getHeight(),
     buttonsWidth = 400,
     buttonsHeight = 50,
+    nButtons = 3,
 }
 
 function Menu.init()
@@ -43,13 +44,17 @@ function Menu.keypressed(key)
     end
 end
 
+local function checkInArea( var, x, y , selector)
+    if ((x > var.button_x) and (x < var.button_x + self.buttonsWidth) and (y > var.button_y) and (y < var.button_y + self.buttonsHeight)) then
+        self.selector = selector
+    end
+end
+
 function Menu.update()
     local x,y =  love.mouse.getPosition()
-    for i in pairs(buttons.menu_stage) do
-        if ((x > buttons.menu_stage[i].button_x) and (x < self.buttonsWidth) and (y > buttons.menu_stage[i].button_y) and (x < self.buttonsHeight)) then
-            self.selector = i
-        end
-    end
+    checkInArea(buttons.menu_stage.play, x, y, 0)
+    checkInArea(buttons.menu_stage.config, x, y, 1)
+    checkInArea(buttons.menu_stage.exit, x, y, 2)
 end
 
 function Menu.draw()

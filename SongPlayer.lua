@@ -2,7 +2,7 @@
 local SongPlayer = {}
 
 local errorTolerance = 0.5
-local perfect_percent = 0.3
+local perfect_percent = 0.2
 local good_percent = 0.6
 
 local perfect_ponits = 0
@@ -315,6 +315,16 @@ function SongPlayer.draw(self)
     for i=1, self.nKeys do 
         Key.draw(keys[i])
     end
+
+    local time = self.speed * (self.rangeTime / self.compass.divisor) / errorTolerance
+    local x = 850
+    local w = 350
+    love.graphics.setColor(1,0,0,0.2)
+    love.graphics.rectangle('fill', x, notesHigh - time, w, time * 2)
+    love.graphics.setColor(1,1,0,0.2)
+    love.graphics.rectangle('fill', x, notesHigh - time * good_percent, w, time * good_percent * 2)
+    love.graphics.setColor(0,1,0,0.2)
+    love.graphics.rectangle('fill', x, notesHigh - time * perfect_percent, w, time * perfect_percent * 2)
 end
 
 function SongPlayer.stopSong(self)
