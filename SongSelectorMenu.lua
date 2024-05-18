@@ -11,29 +11,24 @@ local function startNewGame()
     gameState["running"] = true
     BackgroundParticles.new({r=255, g=0, b=0}, {r=255, g=0, b=255})
 
-    song = SongPlayer.init() 
-
     if songId == 1 then 
-        SongInterpreter.Init("music_1", 3)
-        SongPlayer.new(song, 300, 130, "music_1", 3)
+        SongInterpreter.init("music_1", 3)
+        song = SongPlayer.new(300, 130, "music_1", 3)
     end
     if songId == 2 then 
-        SongInterpreter.Init("music_2", 4)
-        SongPlayer.new(song, 400, 200, "music_2", 4)
+        SongInterpreter.init("music_2", 4)
+        song = SongPlayer.new(400, 200, "music_2", 4)
     end
     if songId == 3 then 
-        SongInterpreter.Init("music_3", 4)
-        SongPlayer.new(song, 400, 140, "music_3", 4)
+        SongInterpreter.init("music_3", 4)
+        song = SongPlayer.new(400, 140, "music_3", 4)
     end
     if songId == 4 then
-        SongInterpreter.Init("music_4", 3)
-        love.audio.setVolume(0.2)
-        SongPlayer.new(song, 400, 130, "music_4", 3)
+        SongInterpreter.init("music_4", 3)
+        love.audio.setVolume(0.5)
+        song = SongPlayer.new(400, 130, "music_4", 3)
     end
 
-    --songPlayer = SongPlayer.init()
-    --songInterpreter = SongInterpreter.init()
-    -- SongPlayer.new(songInterpreter, 400, 140, "music_4")
 end
 
 local function left()

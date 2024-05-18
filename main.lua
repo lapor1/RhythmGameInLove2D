@@ -29,7 +29,9 @@ function love.load()
        
     SongSelectorMenu.init()
     Menu.init()
-    song = SongPlayer.init() 
+    
+    song = {}
+    --song = SongPlayer.init() 
 end
 
 function love.mousepressed(x, y, button, istouch, presses)

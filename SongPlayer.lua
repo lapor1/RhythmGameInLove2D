@@ -14,11 +14,16 @@ local noteRadius = 15
 
 local endSong = false
 
-function SongPlayer.init()
+function SongPlayer.new(speed, bpm, musicFile, nKeys)
     local self = {
         
-        speed, bpm, rangeTime, offset,
+        speed = speed,
+        bpm = bpm, 
+        rangeTime = 60 * 4 / bpm, 
+        offset = notesHigh / speed,
         timerCounter = 0,
+
+        nKeys = nKeys,
 
         notesInScreenVector = {},
         notesInScreenSize = 0,
@@ -32,34 +37,20 @@ function SongPlayer.init()
             msg = ""
         },
         
-        music,
+        music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static"),
         initCounter = 0,
         songPlaying = false,
+        --initUpdate = false,
 
         countPlayedNotes = 0,
         points = 1000,
     }
+
+    Key.init(keys, key_notes, self.nKeys)
+    SongInterpreter.interpretLine(self, self.compass, self.endSong)
     
+   
     return self
-end
-
-function SongPlayer.new(self, speed, bpm, musicFile, nKeys)
-    self.music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static")
-    --self.file = assert(io.open("songs/" .. musicFile .. ".lpr", "r"))
-    self.speed = speed
-    self.bpm = bpm 
-    self.rangeTime = 60 * 4 / self.bpm
-    self.offset = notesHigh / self.speed
-    
-    self.nKeys = nKeys
-    Key.init(keys, key_notes, nKeys) 
-
-    self.timerCounter = 0
-
-    local getNoteOrEnd = false
-    while (not getNoteOrEnd) do
-        getNoteOrEnd = SongInterpreter.interpretLine(self, self.compass, self.endSong)
-    end
 end
 
 function SongPlayer.createNewNote(self, i)
@@ -136,13 +127,9 @@ function SongPlayer.eliminateNote(self, i)
 end
 
 function SongPlayer.update(self, dt)
-    -- Espera a leer el archivo completo
-    --[[
-        ...
-    ]]
 
     -- Espera el desfase inicial
-    if (not self.songPlaying) then 
+    if (not self.songPlaying) then     
         if (self.initCounter >= self.offset) then
             self.songPlaying = true
             love.audio.play(self.music)
@@ -156,11 +143,7 @@ function SongPlayer.update(self, dt)
     if (self.timerCounter >= (self.rangeTime / self.compass.divisor)) then
         local oldDivisor = self.compass.divisor
         if not self.endSong then
-            local getNoteOrEnd = false
-            while (not getNoteOrEnd) do
-                getNoteOrEnd = SongInterpreter.interpretLine(self, self.compass, self.endSong)
-                --getNoteOrEnd = SongInterpreter.interpretLine(self.interpreter)
-            end
+            SongInterpreter.interpretLine(self, self.compass, self.endSong)
         end
         self.timerCounter = self.timerCounter - (self.rangeTime / oldDivisor)
     end
