@@ -1,11 +1,11 @@
 SongInterpreter = require "SongInterpreter"
 local SongPlayer = {}
 
-local errorTolerance = 0.5
-local perfect_percent = 0.2
-local good_percent = 0.6
+local perfect_area = 10
+local good_area = 25
+local bad_area = 40
 
-local perfect_ponits = 0
+local perfect_points = 0
 local good_points = -2.5
 local bad_points = -10
 local miss_points = -50
@@ -98,13 +98,12 @@ function SongPlayer.checkNote(self, key)
     end
     -- Compara la diferencia con el jugador
     if (find_min) then
-        local errorHit = math.abs(self.notesInScreenVector[min_note_id].y -  notesHigh) * errorTolerance
-        local time = self.speed * (self.rangeTime / self.compass.divisor)
-        if (errorHit < time) then
-            if (errorHit < perfect_percent * time) then
+        local errorHit = math.abs(self.notesInScreenVector[min_note_id].y -  notesHigh)
+        if (errorHit < self.rangeTime * bad_area) then
+            if (errorHit < perfect_area * self.rangeTime) then
                 self.msg = "perfect!"
-                self.points = self.points + perfect_ponits
-            elseif (errorHit < good_percent * time) then 
+                self.points = self.points + perfect_points
+            elseif (errorHit < good_area * self.rangeTime) then 
                 self.msg = "good!"
                 self.points = self.points + good_points
             else
@@ -200,15 +199,12 @@ function SongPlayer.draw(self)
         Key.draw(keys[i])
     end
 
-    local time = self.speed * (self.rangeTime / self.compass.divisor) / errorTolerance
-    local x = 50
-    local w = 350
     love.graphics.setColor(1,0,0,0.2)
-    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time, w, time * 2)
+    love.graphics.rectangle('fill', self.xCoord + 50, notesHigh - self.rangeTime * bad_area, 350, self.rangeTime * bad_area * 2)
     love.graphics.setColor(1,1,0,0.2)
-    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time * good_percent, w, time * good_percent * 2)
+    love.graphics.rectangle('fill', self.xCoord + 50, notesHigh - self.rangeTime * good_area, 350, self.rangeTime * good_area * 2)
     love.graphics.setColor(0,1,0,0.2)
-    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time * perfect_percent, w, time * perfect_percent * 2)
+    love.graphics.rectangle('fill', self.xCoord + 50, notesHigh - self.rangeTime * perfect_area, 350, self.rangeTime * perfect_area * 2)
 end
 
 function SongPlayer.stopSong(self)
