@@ -16,31 +16,19 @@ function SongInterpreter.init(musicFile, nKeys)
     return self
 end
 
-local function readLineFormFile()
-    
-end
-
-
 function SongInterpreter.interpretLine(songPlayer, compass, endSong)
 
     local getNoteOrEnd = false
     while(not getNoteOrEnd) do
-
         --Read line
-        --readLineFromFile()
         if (not self.readingNotes) then 
             self.stringLine = self.file:read("*line") 
         end
-
         --Check if song ended
         if (self.stringLine == "end") then
-            -- termina la cancion
             endSong = true
-
             SongPlayer.createCompassLine(songPlayer, false)
-            --return true
             getNoteOrEnd = true
-
         --Read atributes
         elseif (string.sub(self.stringLine, 1,1) == "[") then
             local i = 2
@@ -78,28 +66,21 @@ function SongInterpreter.interpretLine(songPlayer, compass, endSong)
                 compass.msg = compass.dividen .. "/" .. compass.divisor
             end
             self.fisrtCompass = true
-            --return false
-            --getNoteOrEnd = true
 
         -- Coments
         elseif (string.sub(self.stringLine, 1,1) == "") or (string.sub(self.stringLine, 1,1) == " ") or (string.sub(self.stringLine, 1,1) == "-") then
-            --return false
 
         --Read Notes
         else
             if (not self.readingNotes) then
                 self.readingNotes = true
-                
                 if self.fisrtCompass then
                     SongPlayer.createCompassLine(songPlayer, true, true)
                     self.fisrtCompass = false
                 else
                     SongPlayer.createCompassLine(songPlayer, false, true)
                 end
-                
-                --SongPlayer.createCompassLine(songPlayer, true)
             end 
-
             --lee notas
             local noteCoord = (self.readedCounter - 1) * (self.nKeys + 1)
             for i = 1, self.nKeys do
@@ -117,11 +98,8 @@ function SongInterpreter.interpretLine(songPlayer, compass, endSong)
                 self.readedCounter = 1
                 self.readingNotes = false
             end
-            --return true
             getNoteOrEnd = true
         end
-        --return false
-
     end
 end
 

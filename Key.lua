@@ -21,7 +21,7 @@ end
 
 function Key.new(x, key, color)
     local self = {
-        x = x,
+        x = x + playersData[1].xCoord,
         y = notesHigh,
         key = key,
         isPush = false,
@@ -35,6 +35,7 @@ function Key.new(x, key, color)
             g = color.g,
             b = color.b
         },
+        --xCoord = playersData[1].xCoord,
         --sound = love.audio.newSource("sounds/" .. sound .. ".wav", "static")
     }
     return self

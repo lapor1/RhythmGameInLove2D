@@ -14,7 +14,7 @@ local noteRadius = 15
 
 local endSong = false
 
-function SongPlayer.new(speed, bpm, musicFile, nKeys)
+function SongPlayer.new(speed, bpm, nKeys, player, musicFile)
     local self = {
         
         speed = speed,
@@ -37,19 +37,19 @@ function SongPlayer.new(speed, bpm, musicFile, nKeys)
             msg = ""
         },
         
-        music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static"),
+        music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static") or nil,
         initCounter = 0,
         songPlaying = false,
-        --initUpdate = false,
 
         countPlayedNotes = 0,
         points = 1000,
+
+        keys = player.keys,
+        xCoord = player.xCoord,
     }
 
-    Key.init(keys, key_notes, self.nKeys)
+    Key.init(keys, self.keys, self.nKeys)
     SongInterpreter.interpretLine(self, self.compass, self.endSong)
-    
-   
     return self
 end
 
@@ -167,7 +167,7 @@ function SongPlayer.update(self, dt)
     end
 
     for i = 1, self.nKeys do
-        Key.update(keys[i], dt, i, key_notes[i + #key_notes - self.nKeys][1])
+        Key.update(keys[i], dt, i, self.keys[i + #self.keys - self.nKeys][1])
     end
 end
 
@@ -185,8 +185,8 @@ function SongPlayer.draw(self)
         else
             love.graphics.setColor(0.1,0.1,0.1,1)
         end
-        love.graphics.line(key_notes[#key_notes - self.nKeys + 1][2] - 50, self.compassLine[i].y , 1200, self.compassLine[i].y)
-        love.graphics.print(self.compassLine[i].text, key_notes[#key_notes - self.nKeys + 1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
+        love.graphics.line(self.xCoord + self.keys[#self.keys - self.nKeys + 1][2] - 50, self.compassLine[i].y ,self.xCoord + 400, self.compassLine[i].y)
+        love.graphics.print(self.compassLine[i].text, self.xCoord + self.keys[#self.keys - self.nKeys + 1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
     end
 
     love.graphics.setColor(1,1,1,1)
@@ -201,14 +201,14 @@ function SongPlayer.draw(self)
     end
 
     local time = self.speed * (self.rangeTime / self.compass.divisor) / errorTolerance
-    local x = 850
+    local x = 50
     local w = 350
     love.graphics.setColor(1,0,0,0.2)
-    love.graphics.rectangle('fill', x, notesHigh - time, w, time * 2)
+    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time, w, time * 2)
     love.graphics.setColor(1,1,0,0.2)
-    love.graphics.rectangle('fill', x, notesHigh - time * good_percent, w, time * good_percent * 2)
+    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time * good_percent, w, time * good_percent * 2)
     love.graphics.setColor(0,1,0,0.2)
-    love.graphics.rectangle('fill', x, notesHigh - time * perfect_percent, w, time * perfect_percent * 2)
+    love.graphics.rectangle('fill', self.xCoord + x, notesHigh - time * perfect_percent, w, time * perfect_percent * 2)
 end
 
 function SongPlayer.stopSong(self)
@@ -217,7 +217,7 @@ end
 
 function SongPlayer.checkKey(self, key)
     for i = 1, self.nKeys do 
-        if (key == key_notes[i + #key_notes - self.nKeys][1]) then
+        if (key == self.keys[i + #self.keys - self.nKeys][1]) then
             SongPlayer.checkNote(self, i)
             Key.playSound(keys[i])
         end

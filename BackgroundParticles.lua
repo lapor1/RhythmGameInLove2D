@@ -9,7 +9,11 @@ function BackgroundParticles.init()
         min_size = 10,
         max_size = 100,
         bouncy = 10,
-        particle = {}
+        particle = {},
+        keysThatChangeVelocity = {
+            playersData[1].keys[1][1],
+            playersData[1].keys[2][1],
+        },
     }
 end
 
@@ -31,7 +35,7 @@ end
 
 function BackgroundParticles.update(dt)
     local velocity
-    if love.keyboard.isDown(key_notes[1][1]) or love.keyboard.isDown(key_notes[2][1]) then
+    if love.keyboard.isDown(self.keysThatChangeVelocity[1]) or love.keyboard.isDown(self.keysThatChangeVelocity[2]) then
         velocity = 25
     else
         velocity = 5

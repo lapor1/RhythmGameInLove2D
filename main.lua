@@ -4,6 +4,7 @@ Key = require "Key"
 local SongPlayer = require "SongPlayer"
 local Menu = require "Menu"
 local SongSelectorMenu = require "SongSelectorMenu"
+local Player = require "Player"
 
 function love.load()
     gameState = {
@@ -13,16 +14,16 @@ function love.load()
         running = false,
         pause = false,
     }
+
     buttons = {
         menu_stage = {},
         songsMenu_stage = {}
     }
-    key_notes = {
-        {"d", 800, "D", {r=1, g=0, b=0}},
-        {"f", 900, "F", {r=1, g=0.5, b=1}},
-        {"h", 1050, "H", {r=0, g=0.5, b=1}},
-        {"j", 1150, "J", {r=0, g=1, b=1}}
-    }
+
+
+    playersData = {}
+    playersData[1] = Player.init()
+
     BackgroundParticles.init()
     keys = {}
     notesHigh = love.graphics.getHeight() - 120
@@ -31,7 +32,6 @@ function love.load()
     Menu.init()
     
     song = {}
-    --song = SongPlayer.init() 
 end
 
 function love.mousepressed(x, y, button, istouch, presses)

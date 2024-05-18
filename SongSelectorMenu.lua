@@ -13,20 +13,20 @@ local function startNewGame()
 
     if songId == 1 then 
         SongInterpreter.init("music_1", 3)
-        song = SongPlayer.new(300, 130, "music_1", 3)
+        song = SongPlayer.new(300, 130, 3, playersData[1], "music_1")
     end
     if songId == 2 then 
         SongInterpreter.init("music_2", 4)
-        song = SongPlayer.new(400, 200, "music_2", 4)
+        song = SongPlayer.new(400, 200, 4, playersData[1], "music_2")
     end
     if songId == 3 then 
         SongInterpreter.init("music_3", 4)
-        song = SongPlayer.new(400, 140, "music_3", 4)
+        song = SongPlayer.new(400, 140, 4, playersData[1], "music_3")
     end
     if songId == 4 then
         SongInterpreter.init("music_4", 3)
         love.audio.setVolume(0.5)
-        song = SongPlayer.new(400, 130, "music_4", 3)
+        song = SongPlayer.new(400, 130, 3, playersData[1], "music_4")
     end
 
 end
