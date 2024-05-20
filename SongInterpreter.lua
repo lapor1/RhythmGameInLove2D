@@ -13,10 +13,14 @@ function SongInterpreter.init(musicFile, nKeys)
         fisrtCompass = false,
 
     }
-    return self
+    --return self
 end
 
-function SongInterpreter.interpretLine(songPlayer, compass, endSong)
+function SongInterpreter.createCompassLine(playerPlayer)
+
+end
+
+function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
 
     local getNoteOrEnd = false
     while(not getNoteOrEnd) do
@@ -27,7 +31,7 @@ function SongInterpreter.interpretLine(songPlayer, compass, endSong)
         --Check if song ended
         if (self.stringLine == "end") then
             endSong = true
-            SongPlayer.createCompassLine(songPlayer, false)
+            SonInterpreter.createCompassLine(playerPlayer, false, true)
             getNoteOrEnd = true
         --Read atributes
         elseif (string.sub(self.stringLine, 1,1) == "[") then
@@ -75,22 +79,22 @@ function SongInterpreter.interpretLine(songPlayer, compass, endSong)
             if (not self.readingNotes) then
                 self.readingNotes = true
                 if self.fisrtCompass then
-                    SongPlayer.createCompassLine(songPlayer, true, true)
+                    SonInterpreter.createCompassLine(playerPlayer, true, true)
                     self.fisrtCompass = false
                 else
-                    SongPlayer.createCompassLine(songPlayer, false, true)
+                    SonInterpreter.createCompassLine(playerPlayer, false, true)
                 end
             end 
             --lee notas
             local noteCoord = (self.readedCounter - 1) * (self.nKeys + 1)
             for i = 1, self.nKeys do
                 if (string.sub(self.stringLine, noteCoord + i, noteCoord + i) == 'X') then
-                    SongPlayer.createNewNote(songPlayer, i)
+                    SonInterpreter.createNewNote(playerPlayer, i)
 
                 end
             end
             if self.readedCounter > 1 then 
-                SongPlayer.createCompassLine(songPlayer, false, false)
+                SonInterpreter.createCompassLine(playerPlayer, false, false)
             end
             if (self.readedCounter < compass.dividen) then
                 self.readedCounter = self.readedCounter + 1

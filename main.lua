@@ -1,7 +1,8 @@
 local Button = require "Button"
 local BackgroundParticles = require "BackgroundParticles"
-Key = require "Key"
+--Key = require "Key"
 local SongPlayer = require "SongPlayer"
+
 local Menu = require "Menu"
 local SongSelectorMenu = require "SongSelectorMenu"
 local Player = require "Player"
@@ -20,18 +21,18 @@ function love.load()
         songsMenu_stage = {}
     }
 
-
     playersData = {}
-    playersData[1] = Player.init()
+    playersData[1] = Player.init(800, {"a","s","d","f"})
+    playersData[2] = Player.init(200, {"g","j","k","l"})
 
     BackgroundParticles.init()
-    keys = {}
+    --keys = {}
     notesHigh = love.graphics.getHeight() - 120
        
     SongSelectorMenu.init()
     Menu.init()
     
-    song = {}
+    SongPlayer.init()
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
@@ -63,7 +64,7 @@ function love.keypressed(key)
         --...
     end
     if gameState["running"] then
-        SongPlayer.keypressed(song, key)
+        SongPlayer.keypressed(key)
     end
     if gameState["pause"] then
         --...
@@ -82,8 +83,7 @@ function love.update(dt)
         --...
     end
     if gameState["running"] then
-        BackgroundParticles.update(dt)
-        SongPlayer.update(song, dt)
+        SongPlayer.update(dt)
     end
     if gameState["pause"] then
         --...
@@ -98,8 +98,7 @@ function love.draw()
         SongSelectorMenu.draw()
     end
     if gameState["running"] then
-        BackgroundParticles.draw()
-        SongPlayer.draw(song, dt)
+        SongPlayer.draw()
     end
     if gameState["config"] then
         --...

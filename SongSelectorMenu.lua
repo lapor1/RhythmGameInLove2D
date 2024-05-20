@@ -1,34 +1,37 @@
-BackgroundParticles = require "BackgroundParticles"
 SongPlayer = require "SongPlayer"
 
 local SongSelectorMenu = {}
 
-local songId = 4
+local songId = 1
 local nSongs = 4
 
 local function startNewGame()
     gameState["songsMenu"] = false
-    gameState["running"] = true
-    BackgroundParticles.new({r=255, g=0, b=0}, {r=255, g=0, b=255})
-
-    if songId == 1 then 
-        SongInterpreter.init("music_1", 3)
-        song = SongPlayer.new(300, 130, 3, playersData[1], "music_1")
+    
+    
+    if songId == 1 then
+        SongPlayer.new("music_1", 2, 300, 130)
     end
+        --songs[1] = PlayerPlayer.new(300, 130, 3, playersData[1], "music_1", true)
+        --songs[2] = PlayerPlayer.new(300, 130, 3, playersData[2], "music_1", false)
+    --end
+    --[[
     if songId == 2 then 
         SongInterpreter.init("music_2", 4)
-        song = SongPlayer.new(400, 200, 4, playersData[1], "music_2")
+        songs[1] = PlayerPlayer.new(400, 200, 4, playersData[1], "music_2", true)
     end
     if songId == 3 then 
         SongInterpreter.init("music_3", 4)
-        song = SongPlayer.new(400, 140, 4, playersData[1], "music_3")
+        songs[1] = PlayerPlayer.new(400, 140, 4, playersData[1], "music_3", true)
     end
     if songId == 4 then
         SongInterpreter.init("music_4", 3)
         love.audio.setVolume(0.5)
-        song = SongPlayer.new(400, 130, 3, playersData[1], "music_4")
+        songs[1] = PlayerPlayer.new(400, 130, 3, playersData[1], "music_4", true)
     end
-
+    ]]
+    
+    gameState["running"] = true
 end
 
 local function left()
@@ -67,10 +70,10 @@ function SongSelectorMenu.draw()
 end
 
 function SongSelectorMenu.keypressed(key)
-    if (key == "left") and (songId >= 1) then 
+    if (key == "left") and (songId > 1) then 
         songId = songId - 1
     end
-    if (key == "right") and (songId <= 4) then 
+    if (key == "right") and (songId < 4) then 
         songId = songId + 1
     end
     if key == "escape" then 

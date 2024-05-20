@@ -11,17 +11,18 @@ local rectangleWidth = 30
 
 lineNoteWidth = 40
 
-function Key.init(keys, key_notes, nKeys)
+function Key.init(key_notes, nKeys, iPlayer)
+    local keys = {}
     for i = 1, nKeys do
         local j =  i + #key_notes - nKeys
-        keys[i] = Key.new(key_notes[j][2], key_notes[j][3], key_notes[j][4])
+        keys[i] = Key.new(key_notes[j][2], key_notes[j][3], key_notes[j][4], iPlayer)
     end
-    --return keys
+    return keys
 end
 
-function Key.new(x, key, color)
+function Key.new(x, key, color, i)
     local self = {
-        x = x + playersData[1].xCoord,
+        x = x + playersData[i].xCoord,
         y = notesHigh,
         key = key,
         isPush = false,
