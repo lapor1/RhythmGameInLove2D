@@ -1,10 +1,9 @@
 local SongInterpreter = {}
 
-local self = {}
 
-function SongInterpreter.init(musicFile, nKeys)
-    self = {
-        file  = assert(io.open("songs/" .. musicFile .. ".lpr", "r")),
+function SongInterpreter.init(musicFile, nKeys, idPlayer)
+    local self = {
+        file  = assert(io.open("songs/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r")),
                 
         readedCounter = 1,
         readingNotes = false,
@@ -13,15 +12,31 @@ function SongInterpreter.init(musicFile, nKeys)
         fisrtCompass = false,
 
     }
-    --return self
+    return self
 end
 
-function SongInterpreter.createCompassLine(playerPlayer)
-
+function SongInterpreter.createCompassLine(songPlayer, withMsg, isThick)
+    --PlayerPlayer.createCompassLine(song, withMsg, isThick)
+    songPlayer.compassLineSize = songPlayer.compassLineSize + 1
+    songPlayer.compassLine[songPlayer.compassLineSize] = {}
+    songPlayer.compassLine[songPlayer.compassLineSize].y = 0
+    songPlayer.compassLine[songPlayer.compassLineSize].isThick = isThick
+    if withMsg then 
+        songPlayer.compassLine[songPlayer.compassLineSize].text = songPlayer.compass.msg
+    else 
+        songPlayer.compassLine[songPlayer.compassLineSize].text = ""
+    end
 end
 
-function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
+function SongInterpreter.createNewNote(songPlayer, i)
+    songPlayer.notesInScreenSize = songPlayer.notesInScreenSize + 1
+    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize] = {}
+    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].y = 0
+    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].x = songPlayer.keys[i].x
+    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].key = i
+end
 
+function SongInterpreter.interpretLine(self, song)
     local getNoteOrEnd = false
     while(not getNoteOrEnd) do
         --Read line
@@ -30,8 +45,8 @@ function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
         end
         --Check if song ended
         if (self.stringLine == "end") then
-            endSong = true
-            SonInterpreter.createCompassLine(playerPlayer, false, true)
+            song.endSong = true
+            SongInterpreter.createCompassLine(song, false, true)
             getNoteOrEnd = true
         --Read atributes
         elseif (string.sub(self.stringLine, 1,1) == "[") then
@@ -43,9 +58,9 @@ function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
                 if (string.sub(self.stringLine, i, i + 1) == "c=") then
                     i = i + 2; j = i
                     while (string.sub(self.stringLine, j, j) ~= "/") do j = j + 1 end
-                    compass.dividen = tonumber(string.sub(self.stringLine, i, j - 1)); i = j + 1; j = i
+                    song.compass.dividen = tonumber(string.sub(self.stringLine, i, j - 1)); i = j + 1; j = i
                     while ((string.sub(self.stringLine, j, j) ~= ",") and (string.sub(self.stringLine, j, j) ~= "]")) do j = j + 1 end
-                    compass.divisor = tonumber(string.sub(self.stringLine, i, j - 1)); i = j
+                    song.compass.divisor = tonumber(string.sub(self.stringLine, i, j - 1)); i = j
                     changeCompass = true
                 elseif (string.sub(self.stringLine, i, i + 1) == "b=") then
                     i = i + 2; j = i
@@ -59,7 +74,7 @@ function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
                 elseif (string.sub(self.stringLine, i, i + 1) == "m=") then
                     i = i + 2; j = i
                     while ((string.sub(self.stringLine, j, j) ~= ",") and (string.sub(self.stringLine, j, j) ~= "]")) do j = j + 1 end
-                    compass.msg = string.sub(self.stringLine, i, j - 1); i = j
+                    song.compass.msg = string.sub(self.stringLine, i, j - 1); i = j
                     hasMsg = true
                 else
                     i = i + 1
@@ -67,7 +82,7 @@ function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
             end
 
             if changeCompass and not hasMsg then 
-                compass.msg = compass.dividen .. "/" .. compass.divisor
+                song.compass.msg = song.compass.dividen .. "/" .. song.compass.divisor
             end
             self.fisrtCompass = true
 
@@ -79,24 +94,23 @@ function SongInterpreter.interpretLine(playerPlayer, compass, endSong)
             if (not self.readingNotes) then
                 self.readingNotes = true
                 if self.fisrtCompass then
-                    SonInterpreter.createCompassLine(playerPlayer, true, true)
+                    SongInterpreter.createCompassLine(song, true, true)
                     self.fisrtCompass = false
                 else
-                    SonInterpreter.createCompassLine(playerPlayer, false, true)
+                    SongInterpreter.createCompassLine(song, false, true)
                 end
             end 
             --lee notas
             local noteCoord = (self.readedCounter - 1) * (self.nKeys + 1)
             for i = 1, self.nKeys do
                 if (string.sub(self.stringLine, noteCoord + i, noteCoord + i) == 'X') then
-                    SonInterpreter.createNewNote(playerPlayer, i)
-
+                    SongInterpreter.createNewNote(song, i)
                 end
             end
             if self.readedCounter > 1 then 
-                SonInterpreter.createCompassLine(playerPlayer, false, false)
+                SongInterpreter.createCompassLine(song, false, false)
             end
-            if (self.readedCounter < compass.dividen) then
+            if (self.readedCounter < song.compass.dividen) then
                 self.readedCounter = self.readedCounter + 1
             else 
                 self.readedCounter = 1

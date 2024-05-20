@@ -10,7 +10,7 @@ local function startNewGame()
     
     
     if songId == 1 then
-        SongPlayer.new("music_1", 2, 300, 130)
+        SongPlayer.new("music_1", 2, 300, 130, 3)
     end
         --songs[1] = PlayerPlayer.new(300, 130, 3, playersData[1], "music_1", true)
         --songs[2] = PlayerPlayer.new(300, 130, 3, playersData[2], "music_1", false)

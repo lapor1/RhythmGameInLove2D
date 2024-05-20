@@ -1,31 +1,33 @@
 local PlayerPlayer = require "PlayerPlayer"
-local SongInterpreter = require "SongInterpreter"
+--local SongInterpreter = require "SongInterpreter"
 local BackgroundParticles = require "BackgroundParticles"
 
 local SongPlayer = {}
 
 local songs = {}
+local files = {}
 local nPlayers = 0
 local songPlaying = false
 local initCounter = 0
 local offset = 0
+local endedSongs = {}
 
-function SongPlayer.init()
-end
-
-function SongPlayer.new(musicFile, nP, speed, bpm)
+function SongPlayer.new(musicFile, nP, speed, bpm, nKeys)
     BackgroundParticles.new({r=255, g=0, b=0}, {r=255, g=0, b=255})
 
-    SongInterpreter.init(musicFile, 3)
     
     songPlaying = false
     initCounter = 0
     offset = notesHigh  / speed
     nPlayers = nP
-
-    for i = 1, nPlayers do
-        --songs[i] = {}
-        songs[i] = PlayerPlayer.new(speed, bpm, 3, playersData[i], i)
+    endedSongs = {}
+    endTimer = 0
+    
+    for idPlayer = 1, nPlayers do
+        files[idPlayer] = SongInterpreter.init(musicFile, 3, idPlayer)
+        songs[idPlayer] = PlayerPlayer.new(speed, bpm, nKeys, playersData[idPlayer], idPlayer)
+        PlayerPlayer.init(songs[idPlayer], files[idPlayer])
+        endedSongs[idPlayer] = false
     end
 
     music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static")
@@ -43,16 +45,28 @@ function SongPlayer.update(dt)
         end
     end
 
-    for i = 1, nPlayers do
-        PlayerPlayer.update(songs[i], dt)
+    
+    for idPlayer = 1, nPlayers do 
+        PlayerPlayer.update(songs[idPlayer], files[idPlayer], dt)
+        endedSongs[idPlayer] = songs[idPlayer].endSong
     end
+
+
+    if endedSongs[1] and endedSongs[2] then
+        endTimer = endTimer + dt
+        if endTimer >= offset then
+            gameState["running"] = false
+            gameState["songsMenu"] = true
+        end
+    end
+
 end
 
 function SongPlayer.draw()
     BackgroundParticles.draw()
     
-    for i = 1, nPlayers do
-        PlayerPlayer.draw(songs[i], dt)
+    for idPlayer = 1, nPlayers do
+        PlayerPlayer.draw(songs[idPlayer], dt)
     end
 end
 
@@ -62,8 +76,8 @@ function SongPlayer.keypressed(key)
         gameState["songsMenu"] = true
         love.audio.stop(music)
     else
-        for i = 1, nPlayers do
-            PlayerPlayer.checkKey(songs[i], key)
+        for idPlayer = 1, nPlayers do
+            PlayerPlayer.checkKey(songs[idPlayer], key)
         end
     end
 end

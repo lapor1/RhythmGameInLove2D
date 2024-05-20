@@ -13,8 +13,6 @@ local miss_points = -50
 
 local noteRadius = 15
 
-local endSong = false
-
 function PlayerPlayer.new(speed, bpm, nKeys, player, i)
     local self = {
         speed = speed,
@@ -42,13 +40,18 @@ function PlayerPlayer.new(speed, bpm, nKeys, player, i)
         keysData = player.keys,
         xCoord = player.xCoord,
         xData = player.xData,
-        keys = Key.init(player.keys, nKeys, i)
-    }
+        keys = Key.init(player.keys, nKeys, i),
 
-    --SongInterpreter.interpretLine(self, self.compass, endSong)
+        endSong = false,
+    }
     return self
 end
 
+function PlayerPlayer.init(self, file)
+    SongInterpreter.interpretLine(file, self)
+end
+
+--[[
 function PlayerPlayer.createNewNote(self, i)
     self.notesInScreenSize = self.notesInScreenSize + 1
     self.notesInScreenVector[self.notesInScreenSize] = {}
@@ -68,7 +71,7 @@ function PlayerPlayer.createCompassLine(self, withMsg, isThick)
         self.compassLine[self.compassLineSize].text = ""
     end
 end
-
+]]
 function PlayerPlayer.eliminateCompassLine(self, i)
     self.compassLineSize = self.compassLineSize - 1                
     for j=i, self.compassLineSize do
@@ -121,13 +124,13 @@ function PlayerPlayer.eliminateNote(self, i)
     end
 end
 
-function PlayerPlayer.update(self, dt)
+function PlayerPlayer.update(self, file, dt)
     -- Calcula cuando poner la siguiente nota
     self.timerCounter = self.timerCounter + dt
     if (self.timerCounter >= (self.rangeTime / self.compass.divisor)) then
         local oldDivisor = self.compass.divisor
         if not self.endSong then
-            SongInterpreter.interpretLine(self, self.compass, endSong)
+            SongInterpreter.interpretLine(file, self)
         end
         self.timerCounter = self.timerCounter - (self.rangeTime / oldDivisor)
     end
