@@ -1,17 +1,20 @@
 local SongInterpreter = {}
 
-function SongInterpreter.init(musicFile, nKeys, idPlayer)
+function SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles)
     local self = {
-        --file  = assert(io.open("songs/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r")),
-        file  = assert(io.open("songs/" .. musicFile .. "_p1.lpr", "r")),
-                
         readedCounter = 1,
         readingNotes = false,
         stringLine = "",
         nKeys = nKeys,
         fisrtCompass = false,
-
     }
+    
+    if multiPlayerFiles then
+        self.file = assert(io.open("songs/" .. musicFile .. "/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r"))
+    else
+        self.file = assert(io.open("songs/" .. musicFile .. "/" .. musicFile .. ".lpr", "r"))
+    end
+
     return self
 end
 

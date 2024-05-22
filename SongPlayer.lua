@@ -12,25 +12,30 @@ local initCounter = 0
 local offset = 0
 local endedSongs = {}
 
-function SongPlayer.new(musicFile, nP, speed, bpm, nKeys)
-    BackgroundParticles.new({r=255, g=0, b=0}, {r=255, g=0, b=255})
-
-    
+function SongPlayer.init(speed, nP)
     songPlaying = false
     initCounter = 0
-    offset = notesHigh  / speed
-    nPlayers = nP
     endedSongs = {}
     endTimer = 0
-    
+    offset = notesHigh  / speed
+    nPlayers = nP
+end
+
+function SongPlayer.new(musicFile, nP, speed, bpm, nKeys, multiPlayerFiles)
+    BackgroundParticles.createParticles()
+    SongPlayer.init(speed, nP)
+
     for idPlayer = 1, nPlayers do
-        files[idPlayer] = SongInterpreter.init(musicFile, 3, idPlayer)
+        files[idPlayer] = SongInterpreter.init(musicFile, 3, idPlayer, multiPlayerFiles)
         songs[idPlayer] = PlayerPlayer.new(speed, bpm, nKeys, playersData[idPlayer], idPlayer)
         PlayerPlayer.init(songs[idPlayer], files[idPlayer])
         endedSongs[idPlayer] = false
     end
 
-    music = love.audio.newSource("songs/" .. musicFile .. ".wav", "static")
+    music = love.audio.newSource("songs/" .. musicFile .. "/" .. musicFile .. ".wav", "static")
+
+    gameState["songsMenu"] = false
+    gameState["running"] = true
 end
 
 function SongPlayer.update(dt)
