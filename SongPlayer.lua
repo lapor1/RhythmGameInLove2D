@@ -1,5 +1,5 @@
-local PlayerPlayer = require "PlayerPlayer"
---local SongInterpreter = require "SongInterpreter"
+PlayerPlayer = require "PlayerPlayer"
+SongInterpreter = require "SongInterpreter"
 local BackgroundParticles = require "BackgroundParticles"
 
 local SongPlayer = {}
@@ -48,6 +48,8 @@ function SongPlayer.update(dt)
     
     for idPlayer = 1, nPlayers do 
         PlayerPlayer.update(songs[idPlayer], files[idPlayer], dt)
+
+
         endedSongs[idPlayer] = songs[idPlayer].endSong
     end
 

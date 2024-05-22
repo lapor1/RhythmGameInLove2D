@@ -1,5 +1,4 @@
-SongInterpreter = require "SongInterpreter"
-Key = require "Key"
+local Key = require "Key"
 local PlayerPlayer = {}
 
 local perfect_area = 10
@@ -51,7 +50,6 @@ function PlayerPlayer.init(self, file)
     SongInterpreter.interpretLine(file, self)
 end
 
---[[
 function PlayerPlayer.createNewNote(self, i)
     self.notesInScreenSize = self.notesInScreenSize + 1
     self.notesInScreenVector[self.notesInScreenSize] = {}
@@ -71,7 +69,7 @@ function PlayerPlayer.createCompassLine(self, withMsg, isThick)
         self.compassLine[self.compassLineSize].text = ""
     end
 end
-]]
+
 function PlayerPlayer.eliminateCompassLine(self, i)
     self.compassLineSize = self.compassLineSize - 1                
     for j=i, self.compassLineSize do

@@ -1,9 +1,9 @@
 local SongInterpreter = {}
 
-
 function SongInterpreter.init(musicFile, nKeys, idPlayer)
     local self = {
-        file  = assert(io.open("songs/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r")),
+        --file  = assert(io.open("songs/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r")),
+        file  = assert(io.open("songs/" .. musicFile .. "_p1.lpr", "r")),
                 
         readedCounter = 1,
         readingNotes = false,
@@ -13,27 +13,6 @@ function SongInterpreter.init(musicFile, nKeys, idPlayer)
 
     }
     return self
-end
-
-function SongInterpreter.createCompassLine(songPlayer, withMsg, isThick)
-    --PlayerPlayer.createCompassLine(song, withMsg, isThick)
-    songPlayer.compassLineSize = songPlayer.compassLineSize + 1
-    songPlayer.compassLine[songPlayer.compassLineSize] = {}
-    songPlayer.compassLine[songPlayer.compassLineSize].y = 0
-    songPlayer.compassLine[songPlayer.compassLineSize].isThick = isThick
-    if withMsg then 
-        songPlayer.compassLine[songPlayer.compassLineSize].text = songPlayer.compass.msg
-    else 
-        songPlayer.compassLine[songPlayer.compassLineSize].text = ""
-    end
-end
-
-function SongInterpreter.createNewNote(songPlayer, i)
-    songPlayer.notesInScreenSize = songPlayer.notesInScreenSize + 1
-    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize] = {}
-    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].y = 0
-    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].x = songPlayer.keys[i].x
-    songPlayer.notesInScreenVector[songPlayer.notesInScreenSize].key = i
 end
 
 function SongInterpreter.interpretLine(self, song)
@@ -46,7 +25,7 @@ function SongInterpreter.interpretLine(self, song)
         --Check if song ended
         if (self.stringLine == "end") then
             song.endSong = true
-            SongInterpreter.createCompassLine(song, false, true)
+            PlayerPlayer.createCompassLine(song, false, true)
             getNoteOrEnd = true
         --Read atributes
         elseif (string.sub(self.stringLine, 1,1) == "[") then
@@ -94,21 +73,21 @@ function SongInterpreter.interpretLine(self, song)
             if (not self.readingNotes) then
                 self.readingNotes = true
                 if self.fisrtCompass then
-                    SongInterpreter.createCompassLine(song, true, true)
+                    PlayerPlayer.createCompassLine(song, true, true)
                     self.fisrtCompass = false
                 else
-                    SongInterpreter.createCompassLine(song, false, true)
+                    PlayerPlayer.createCompassLine(song, false, true)
                 end
             end 
             --lee notas
             local noteCoord = (self.readedCounter - 1) * (self.nKeys + 1)
             for i = 1, self.nKeys do
                 if (string.sub(self.stringLine, noteCoord + i, noteCoord + i) == 'X') then
-                    SongInterpreter.createNewNote(song, i)
+                    PlayerPlayer.createNewNote(song, i)
                 end
             end
             if self.readedCounter > 1 then 
-                SongInterpreter.createCompassLine(song, false, false)
+                PlayerPlayer.createCompassLine(song, false, false)
             end
             if (self.readedCounter < song.compass.dividen) then
                 self.readedCounter = self.readedCounter + 1
