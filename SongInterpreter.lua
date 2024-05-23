@@ -1,6 +1,6 @@
 local SongInterpreter = {}
 
-function SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles)
+function SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles, haveDiferentsPartiruesMatch)
     local self = {
         readedCounter = 1,
         readingNotes = false,
@@ -9,7 +9,7 @@ function SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles)
         fisrtCompass = false,
     }
     
-    if multiPlayerFiles then
+    if multiPlayerFiles and haveDiferentsPartiruesMatch then
         self.file = assert(io.open("songs/" .. musicFile .. "/" .. musicFile .. "_p" .. idPlayer .. ".lpr", "r"))
     else
         self.file = assert(io.open("songs/" .. musicFile .. "/" .. musicFile .. ".lpr", "r"))

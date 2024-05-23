@@ -73,7 +73,7 @@ function MetadataInterpreter.initFile(nameFile)
         init_bpm = 0,
         min_bpm = 0,
         max_bpm = 0,
-        max_players = 1,
+        players = 1,
         keys_per_player = 0,
         backgound_color_A = {r=0, b=0, g=0},
         backgound_color_B = {r=0, b=0, g=0},
@@ -93,7 +93,7 @@ function MetadataInterpreter.readFile()
     data.init_bpm = readLineInt()
     data.min_bpm = readLineInt()
     data.max_bpm = readLineInt()
-    data.max_players = readLineInt()
+    data.players = readLineInt()
     data.keys_per_player = readLineInt()
     data.backgound_color_A = readLineColor()
     data.backgound_color_B = readLineColor()

@@ -20,9 +20,11 @@ function love.load()
         songsMenu_stage = {}
     }
 
+    maxPlayers = 3
     playersData = {}
-    playersData[1] = Player.init(800, {"a","s","d","f"})
-    playersData[2] = Player.init(200, {"g","j","k","l"})
+    playersData[1] = Player.init(300, {"a","s","d","f"})
+    playersData[2] = Player.init(800, {"h","j","k","l"})
+    playersData[3] = Player.init(1400, {"t","y","u","i"})
     
     --keys = {}
     notesHigh = love.graphics.getHeight() - 120

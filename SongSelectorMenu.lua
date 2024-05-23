@@ -35,7 +35,8 @@ local function startNewGame()
         nPlayers,               -- players
         data.init_speed * sm,
         data.init_bpm,
-        data.keys_per_player
+        data.keys_per_player,
+        data.players            -- partituras para diferentes jugadores
     )
 end
 
@@ -103,7 +104,7 @@ function SongSelectorMenu.keypressed(key)
         gameState["menu"] = true
         gameState["songsMenu"] = false
     end
-    if (key == "up") then 
+    if (key == "up") and (nPlayers < maxPlayers) then 
         nPlayers = nPlayers + 1
     end
     if (key == "down") and (nPlayers > 1) then 
