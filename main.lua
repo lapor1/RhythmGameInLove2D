@@ -50,20 +50,26 @@ function love.mousepressed(x, y, button, istouch, presses)
 end
 
 function love.keypressed(key)
-    if gameState["menu"] then
+    local change = false
+    if gameState["menu"] and not change then
         Menu.keypressed(key)
+        change = true
     end
-    if gameState["songsMenu"] then
+    if gameState["songsMenu"] and not change then
         SongSelectorMenu.keypressed(key)
+        change = true
     end
-    if gameState["config"] then
+    if gameState["config"] and not change then
         --...
+        change = true
     end
-    if gameState["running"] then
+    if gameState["running"] and not change then
         SongPlayer.keypressed(key)
+        change = true
     end
-    if gameState["pause"] then
+    if gameState["pause"] and not change then
         --...
+        change = true
     end
 end
 
@@ -73,7 +79,7 @@ function love.update(dt)
         Menu.update()
     end
     if gameState["songsMenu"] then
-        SongSelectorMenu.update()
+        SongSelectorMenu.update(dt)
     end
     if gameState["config"] then
         --...

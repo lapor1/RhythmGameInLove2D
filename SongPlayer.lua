@@ -21,12 +21,12 @@ function SongPlayer.init(speed, nP)
     nPlayers = nP
 end
 
-function SongPlayer.new(musicFile, nP, speed, bpm, nKeys, multiPlayerFiles)
+function SongPlayer.new(musicFile, nP, speed, bpm, nKeys)
     BackgroundParticles.createParticles()
     SongPlayer.init(speed, nP)
 
     for idPlayer = 1, nPlayers do
-        files[idPlayer] = SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles)
+        files[idPlayer] = SongInterpreter.init(musicFile, nKeys, idPlayer, (nP > 1))
         songs[idPlayer] = PlayerPlayer.new(speed, bpm, nKeys, playersData[idPlayer], idPlayer)
         PlayerPlayer.init(songs[idPlayer], files[idPlayer])
         endedSongs[idPlayer] = false

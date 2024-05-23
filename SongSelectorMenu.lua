@@ -35,8 +35,7 @@ local function startNewGame()
         nPlayers,               -- players
         data.init_speed * sm,
         data.init_bpm,
-        data.keys_per_player,
-        false                   -- multiplayer
+        data.keys_per_player
     )
 end
 
@@ -55,29 +54,33 @@ local function right()
 end
 
 function SongSelectorMenu.init()
-    --BackgroundParticles.init()
+    BackgroundParticles.init({r=255, g=255, b=255}, {r=255, g=255, b=255}, 10, 10, 100, 50, 100)
+    BackgroundParticles.createParticles()
+
     buttons.songsMenu_stage.play = Button("Play", startNewGame, nil)
     buttons.songsMenu_stage.left= Button("<", left, nil, 40, 50)
     buttons.songsMenu_stage.right= Button(">", right, nil, 40, 50)
     actualizateDataSong()
 end
 
-function SongSelectorMenu.update()
-
+function SongSelectorMenu.update(dt)
+    BackgroundParticles.update(dt)
 end
 
 function SongSelectorMenu.draw()
+    -- draw data
     love.graphics.setColor(1,1,1,1)
     love.graphics.print("Select your song", 10, 10)
     love.graphics.print("Song = " .. songId, 10, 30)
     love.graphics.print("Speed multiple = " .. sm, 10, 50)
     love.graphics.print("Players = " .. nPlayers, 10, 70)
 
+    -- buttons
     buttons.songsMenu_stage.play:draw(800,20,10,20)
     buttons.songsMenu_stage.left:draw(750,20,10,10)
     buttons.songsMenu_stage.right:draw(950,20,10,10)
 
-
+    -- draw song data
     love.graphics.print("Name = " .. data.name, 600, 100)
     love.graphics.print("Artist = " .. data.artist, 600, 120)
     love.graphics.print("Compass = " .. data.compass, 600, 140)
@@ -88,17 +91,26 @@ function SongSelectorMenu.draw()
 end
 
 function SongSelectorMenu.keypressed(key)
-    if (key == "left") and (songId > 1) then 
+    if (key == "left") and (songId > 1) then
         songId = songId - 1
         actualizateDataSong()
     end
-    if (key == "right") and (songId < 4) then 
+    if (key == "right") and (songId < 4) then
         songId = songId + 1
         actualizateDataSong()
     end
-    if key == "escape" then 
+    if (key == "escape") then 
         gameState["menu"] = true
         gameState["songsMenu"] = false
+    end
+    if (key == "up") then 
+        nPlayers = nPlayers + 1
+    end
+    if (key == "down") and (nPlayers > 1) then 
+        nPlayers = nPlayers - 1
+    end
+    if (key == "return") or (key == "space") or (key == "kpenter") then 
+        startNewGame()
     end
 end
 
