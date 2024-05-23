@@ -1,0 +1,7 @@
+[ ] ajustar ancho de barras de porcentaje
+[ ] ajustar separacion de keys
+[ ] ajustar tamaños en patntalla
+    [ ] hacer todo variable al ancho
+    [ ] que se pueda actualizar
+    [ ] hacer en canfiguaciones un menu para cambiar el ancho y alto de pantalla
+    [ ] hacer varias escalas de GUI
