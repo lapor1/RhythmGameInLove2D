@@ -152,7 +152,8 @@ function PlayerPlayer.update(self, file, dt)
     end
     
     for i = 1, self.nKeys do
-        Key.update(self.keys[i], dt, i, self.keysData[i + #self.keysData - self.nKeys][1])
+        --Key.update(self.keys[i], dt, i, self.keysData[i + #self.keysData - self.nKeys][1])
+        Key.update(self.keys[i], dt, i, self.keysData[i][1])
     end
 end
 
@@ -170,8 +171,10 @@ function PlayerPlayer.draw(self)
         else
             love.graphics.setColor(0.1,0.1,0.1,1)
         end
-        love.graphics.line(self.xCoord + self.keysData[#self.keysData - self.nKeys + 1][2] - 50, self.compassLine[i].y ,self.xCoord + 400, self.compassLine[i].y)
-        love.graphics.print(self.compassLine[i].text, self.xCoord + self.keysData[#self.keysData - self.nKeys + 1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
+        --love.graphics.line(self.xCoord + self.keysData[#self.keysData - self.nKeys + 1][2] - 50, self.compassLine[i].y ,self.xCoord + 400, self.compassLine[i].y)
+        --love.graphics.print(self.compassLine[i].text, self.xCoord + self.keysData[#self.keysData - self.nKeys + 1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
+        love.graphics.line(self.xCoord + self.keysData[1][2] - 50, self.compassLine[i].y ,self.xCoord + 400, self.compassLine[i].y)
+        love.graphics.print(self.compassLine[i].text, self.xCoord + self.keysData[1][2] - 190, self.compassLine[i].y - 70, 0, 5, 5)
     end
 
     love.graphics.setColor(1,1,1,1)
@@ -195,8 +198,9 @@ end
 
 function PlayerPlayer.checkKey(self, key)
     for i = 1, self.nKeys do 
-        if (key == self.keysData[i + #self.keysData - self.nKeys][1]) then
-            PlayerPlayer.checkNote(self, i)
+        --if (key == self.keysData[i + #self.keysData - self.nKeys][1]) then
+        if (key == self.keysData[i][1]) then
+        PlayerPlayer.checkNote(self, i)
             --Key.playSound(self.keys[i])
         end
     end 

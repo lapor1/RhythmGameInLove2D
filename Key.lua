@@ -14,8 +14,9 @@ lineNoteWidth = 40
 function Key.init(key_notes, nKeys, iPlayer)
     local keys = {}
     for i = 1, nKeys do
-        local j =  i + #key_notes - nKeys
-        keys[i] = Key.new(key_notes[j][2], key_notes[j][3], key_notes[j][4], iPlayer)
+        --local j =  i + #key_notes - nKeys
+        --keys[i] = Key.new(key_notes[j][2], key_notes[j][3], key_notes[j][4], iPlayer)
+        keys[i] = Key.new(key_notes[i][2], key_notes[i][3], key_notes[i][4], iPlayer)
     end
     return keys
 end

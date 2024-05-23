@@ -26,7 +26,7 @@ function SongPlayer.new(musicFile, nP, speed, bpm, nKeys, multiPlayerFiles)
     SongPlayer.init(speed, nP)
 
     for idPlayer = 1, nPlayers do
-        files[idPlayer] = SongInterpreter.init(musicFile, 3, idPlayer, multiPlayerFiles)
+        files[idPlayer] = SongInterpreter.init(musicFile, nKeys, idPlayer, multiPlayerFiles)
         songs[idPlayer] = PlayerPlayer.new(speed, bpm, nKeys, playersData[idPlayer], idPlayer)
         PlayerPlayer.init(songs[idPlayer], files[idPlayer])
         endedSongs[idPlayer] = false
@@ -49,12 +49,9 @@ function SongPlayer.update(dt)
             initCounter = initCounter + dt
         end
     end
-
     
     for idPlayer = 1, nPlayers do 
         PlayerPlayer.update(songs[idPlayer], files[idPlayer], dt)
-
-
         endedSongs[idPlayer] = songs[idPlayer].endSong
     end
 
@@ -66,7 +63,6 @@ function SongPlayer.update(dt)
             gameState["songsMenu"] = true
         end
     end
-
 end
 
 function SongPlayer.draw()

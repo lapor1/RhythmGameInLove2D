@@ -107,6 +107,7 @@ function SongSelectorMenu.mousepressed(button, x, y)
         if gameState["songsMenu"] then
             for i in pairs(buttons.songsMenu_stage) do
                 buttons.songsMenu_stage[i]:checkIfClicked(x, y)
+                actualizateDataSong()
             end
         end
     end

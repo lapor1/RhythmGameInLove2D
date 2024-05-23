@@ -2,24 +2,7 @@ local MetadataInterpreter = {}
 
 local file
 
-local data = {
-    name = "",
-    artist = "",
-    compass = "",
-    dificulty = "",
-    init_speed = 0,
-    init_bpm = 0,
-    min_bpm = 0,
-    max_bpm = 0,
-    max_players = 1,
-    keys_per_player = 0,
-    backgound_color_A = {r=0, b=0, g=0},
-    backgound_color_B = {r=0, b=0, g=0},
-    backgound_density = 0,
-    backgound_bouncy = 0,
-    backgound_min_size_particle = 0,
-    backgound_max_size_particle = 0,
-}
+local data = {}
 
 local function readLineString()
     local stringLine = file:read("*line")
@@ -80,6 +63,25 @@ end
 
 function MetadataInterpreter.initFile(nameFile)
     file = assert(io.open("songs/" .. nameFile .. "/" .. nameFile .. "_metadata.lpr", "r"))
+
+    data = {
+        name = "",
+        artist = "",
+        compass = "",
+        dificulty = "",
+        init_speed = 0,
+        init_bpm = 0,
+        min_bpm = 0,
+        max_bpm = 0,
+        max_players = 1,
+        keys_per_player = 0,
+        backgound_color_A = {r=0, b=0, g=0},
+        backgound_color_B = {r=0, b=0, g=0},
+        backgound_density = 0,
+        backgound_bouncy = 0,
+        backgound_min_size_particle = 0,
+        backgound_max_size_particle = 0,
+    }
 end
 
 function MetadataInterpreter.readFile()
